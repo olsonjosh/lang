@@ -8,7 +8,7 @@ class Parser:
         self.next_token()
 
     def next_token(self):
-        match = re.match(r'^\s*(\d+|\+|-|\*|/|\(|\))', self.input_string)
+        match = re.match(r'^\s*("[^"]*"|\d+|[a-zA-Z_]\w*|\+|-|\*|/|\(|\)|,|;)', self.input_string)
         if not match:
             self.current_token = None
         else:
@@ -16,10 +16,21 @@ class Parser:
             self.input_string = self.input_string[match.end():]
 
     def parse(self):
-        result = self.parse_expression()
-        if self.current_token:
-            raise SyntaxError('Unexpected token: ' + self.current_token)
-        return result
+        statements = []
+        while self.current_token:
+            statements.append(self.parse_statement())
+            if self.current_token == ';':
+                self.next_token()
+        return statements
+
+    def parse_statement(self):
+        if self.current_token == 'print':
+            self.next_token()
+            expr = self.parse_expression()
+            return ('print', expr)
+        else:
+            expr = self.parse_expression()
+            return ('expr', expr)
 
     def parse_expression(self):
         result = self.parse_term()
@@ -46,15 +57,18 @@ class Parser:
         return result
 
     def parse_factor(self):
-        if self.current_token == '(':
+        if self.current_token.isdigit():
+            result = int(self.current_token)
+            self.next_token()
+        elif self.current_token.startswith('"') and self.current_token.endswith('"'):
+            result = self.current_token[1:-1]
+            self.next_token()
+        elif self.current_token == '(':
             self.next_token()
             result = self.parse_expression()
             if self.current_token != ')':
                 raise SyntaxError('Expected )')
             self.next_token()
-        elif self.current_token.isdigit():
-            result = int(self.current_token)
-            self.next_token()
         else:
-            raise SyntaxError('Expected number or (')
+            raise SyntaxError('Expected number, string, or (')
         return result
