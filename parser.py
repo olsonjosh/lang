@@ -28,10 +28,10 @@ class Parser:
         if self.current_token == 'print':
             self.next_token()
             expr = self.parse_expression()
-            return ('print', expr)
+            return 'print', expr
         else:
             expr = self.parse_expression()
-            return ('expr', expr)
+            return 'expr', expr
 
     def parse_expression(self):
         result = self.parse_term()
