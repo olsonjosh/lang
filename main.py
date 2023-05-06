@@ -3,14 +3,11 @@ from parser import Parser
 
 
 def main():
-    input_string = 'print "hello, world!"\n3 + 4 * (2 - 1) / 5\n'
+    input_string = '2 + 3 * 4'
     parser = Parser(input_string)
-    statements = parser.parse()
-    for statement in statements:
-        if statement[0] == 'print':
-            print(statement[1])
-        else:
-            print(statement[1], end=' ')
+    expr = parser.parse_expression()
+    cpp_code = f"std::cout << {expr};"
+    print(cpp_code)
 
 
 if __name__ == '__main__':

@@ -61,15 +61,17 @@ class Parser:
         if self.current_token.isdigit():
             result = int(self.current_token)
             self.next_token()
+            return result
         elif self.current_token.startswith('"') and self.current_token.endswith('"'):
             result = self.current_token[1:-1]
             self.next_token()
+            return result
         elif self.current_token == '(':
             self.next_token()
             result = self.parse_expression()
             if self.current_token != ')':
                 raise SyntaxError('Expected )')
             self.next_token()
+            return result
         else:
             raise SyntaxError('Expected number, string, or (')
-        return result
