@@ -3,7 +3,7 @@ from parser import Parser
 
 
 def main():
-    input_string = 'print "hello, world!"; 3 + 4 * (2 - 1) / 5;'
+    input_string = 'print "hello, world!"\n3 + 4 * (2 - 1) / 5\n'
     parser = Parser(input_string)
     statements = parser.parse()
     for statement in statements:

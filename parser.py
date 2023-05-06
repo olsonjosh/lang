@@ -8,7 +8,8 @@ class Parser:
         self.next_token()
 
     def next_token(self):
-        match = re.match(r'^\s*("[^"]*"|\d+|[a-zA-Z_]\w*|\+|-|\*|/|\(|\)|,|;)', self.input_string)
+        TOKEN_REGEX = re.compile(r'^\s*("[^"]*"|\d+|[a-zA-Z_]\w*|\+|-|\*|/|\(|\)|,|;)', re.DOTALL)
+        match = re.match(TOKEN_REGEX, self.input_string)
         if not match:
             self.current_token = None
         else:
